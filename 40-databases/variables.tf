@@ -13,3 +13,7 @@ variable "zone_id" {
 variable "domain_name" {
    default = "daw84s.store"
 }
+
+variable "mysql_root_password" {
+  type = string
+}
