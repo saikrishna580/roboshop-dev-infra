@@ -121,7 +121,7 @@ resource "aws_instance" "mysql" {
 
   tags = merge(
     {
-        Name = "${local.common_name}-rabbitmq"
+        Name = "${local.common_name}-mysql"
     },
     local.common_tags
   )
