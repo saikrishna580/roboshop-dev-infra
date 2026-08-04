@@ -1,17 +1,12 @@
 {
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Sid": "VisualEditor0",
-			"Effect": "Allow",
-			"Action": "ssm:GetParameter",
-			"Resource": "arn:aws:ssm:us-east-1:108722978854:parameter/roboshop/dev/mysql_root_password"
-		},
-		{
-			"Sid": "VisualEditor1",
-			"Effect": "Allow",
-			"Action": "ssm:DescribeParameters",
-			"Resource": "*"
-		}
-	]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": "arn:aws:secretsmanager:us-east-1:108722978854:secret:roboshop/mysql_root_password*"
+    }
+  ]
 }
