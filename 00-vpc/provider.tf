@@ -8,7 +8,7 @@ terraform {
   
   # romate state storage location
   backend "s3" {
-    bucket         = "remote-state-daw84s.store-dev"
+    bucket         = "daw84s-store-dev-new"
     key            = "roboshop-vpc.tfstate"
     region         = "us-east-1"
     encrypt        = true
