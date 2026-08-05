@@ -103,7 +103,7 @@ resource "aws_lb_target_group" "catalogue" {
   name     = "${local.common_name}-catalogue"
   port     = 8080
   protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  vpc_id   = local.vpc_id
   deregistration_delay = 30
 
   health_check {
