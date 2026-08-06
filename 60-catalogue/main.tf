@@ -64,7 +64,7 @@ resource "aws_launch_template" "catalogue" {
 
   instance_initiated_shutdown_behavior = "terminate"
   instance_type = "t3.micro"
-  vpc_security_group_ids = ["local.catalogue_sg_id"]
+  vpc_security_group_ids = [local.catalogue_sg_id]
   update_default_version = true
 
   # once the instances are created, these will become instance tags
@@ -115,5 +115,55 @@ resource "aws_lb_target_group" "catalogue" {
     protocol = "HTTP"
     timeout = 5
     unhealthy_threshold = 2
+  }
+}
+
+resource "aws_autoscaling_group" "catalogue" {
+  name                      = "${local.common_name}-catalogue"
+  max_size                  = 10
+  min_size                  = 1
+  health_check_grace_period = 120
+  health_check_type         = "ELB"
+  desired_capacity          = 2
+  force_delete              = false
+   launch_template {
+    id      = aws_launch_template.catalogue.id
+    version = "$Latest"
+  }
+
+  vpc_zone_identifier       = [local.private_subnet_id]
+  
+  target_group_arns = [aws_lb_target_group.catalogue.arn] # Autoscaling launches into specific target group
+  
+  dynamic "tag" {
+    for_each = merge(
+      {
+        Name = "${local.common_name}-catalogue"
+      },
+      local.common_tags
+    )
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+ # with in 15 mints autoscaling should be successful to launch instance s
+  timeouts {
+    delete = "15m"
+  }
+}
+
+resource "aws_autoscaling_policy" "catalogue" {
+  autoscaling_group_name = aws_autoscaling_group.catalogue.name
+  name                   = "${local.common_name}-catalogue"
+  policy_type            =  "TargetTrackingScaling"
+  estimated_instance_warmup = 120
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 75.0
   }
 }
