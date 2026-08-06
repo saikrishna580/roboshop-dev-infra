@@ -34,7 +34,7 @@ resource "aws_lb_listener" "http" {
 
 resource "aws_route53_record" "www" {
   zone_id = var.zone_id
-  name    = "*.backend-alb-${var.environment}.daws84s.store"  # *.backend-alb-dev.daws84s.store
+  name    = "*.backend-alb-${var.environment}.daw84s.store"  # *.backend-alb-dev.daws84s.store
   type    = "A"
 
   alias {
